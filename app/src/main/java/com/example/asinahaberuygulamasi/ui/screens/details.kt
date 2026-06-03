@@ -106,7 +106,7 @@ fun DetailScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-            HorizontalDivider() // ✅ DÜZELTME: Divider() → HorizontalDivider() (yeni Material3 API)
+            HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -135,7 +135,7 @@ fun DetailScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically // ✅ YENİ: dikey hizalama
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     CircularProgressIndicator()
                     Spacer(modifier = Modifier.width(12.dp))
@@ -212,7 +212,7 @@ fun DetailScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically // ✅ YENİ: dikey hizalama
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.width(12.dp))

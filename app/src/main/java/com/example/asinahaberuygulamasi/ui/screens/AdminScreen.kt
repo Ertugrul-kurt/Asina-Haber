@@ -24,7 +24,7 @@ fun AdminScreen(onBackClick: () -> Unit) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* Haber ekleme formu */ }) {
+            FloatingActionButton(onClick = {}) {
                 Icon(Icons.Default.Add, contentDescription = "Haber Ekle")
             }
         }

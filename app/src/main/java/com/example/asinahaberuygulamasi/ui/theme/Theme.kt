@@ -32,7 +32,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun AsinaHaberUygulamasiTheme(
-    darkTheme: Boolean = true, // Force Dark for Bundle style
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

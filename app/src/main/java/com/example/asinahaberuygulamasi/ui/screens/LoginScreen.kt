@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: (String, Boolean) -> Unit,
+    onLoginSuccess: (String, String, Boolean) -> Unit,
     onRegisterClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -146,7 +146,6 @@ fun LoginScreen(
                             errorMessage = ""
                             try {
                                 if (kayitModu) {
-                                    // KAYIT
                                     RetrofitClient.apiService.kayitOl(
                                         KullaniciKayitRequest(
                                             email = email,
@@ -154,18 +153,16 @@ fun LoginScreen(
                                             isim = isimField
                                         )
                                     )
-                                    // Kayıt başarılı, giriş moduna geç
                                     kayitModu = false
                                     errorMessage = "Kayıt başarılı! Şimdi giriş yapabilirsiniz."
                                 } else {
-                                    // GİRİŞ
                                     val sonuc = RetrofitClient.apiService.girisYap(
                                         KullaniciKayitRequest(
                                             email = email,
                                             sifre = password
                                         )
                                     )
-                                    onLoginSuccess(sonuc.email, sonuc.admin)
+                                    onLoginSuccess(sonuc.email, sonuc.isim ?: "", sonuc.admin)
                                 }
                             } catch (e: retrofit2.HttpException) {
                                 errorMessage = when (e.code()) {

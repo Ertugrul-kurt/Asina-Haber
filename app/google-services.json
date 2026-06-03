@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119046586888",
+    "project_id": "asina-ddfc9",
+    "storage_bucket": "asina-ddfc9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119046586888:android:d3039648480a2ed14907bd",
+        "android_client_info": {
+          "package_name": "com.example.asinahaberuygulamasi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChouo34OTo9q3CBiXeBbb2SeS72Bl4W6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+motor
+google-genai
+httpx
+bcrypt
+deep-translator
+pydantic

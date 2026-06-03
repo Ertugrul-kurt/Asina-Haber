@@ -1,10 +1,15 @@
+
 package com.example.asinahaberuygulamasi.model
 
+import com.google.gson.annotations.SerializedName
+
 data class NewsItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val imageUrl: String,
-    val category: String,
-    val source: String
+    @SerializedName("newsId")
+    val id: Int = 0,
+    val title: String = "",
+    val description: String = "",
+    val imageUrl: String? = null,
+    val category: String = "",
+    val source: String = "",
+    val date: String = ""
 )

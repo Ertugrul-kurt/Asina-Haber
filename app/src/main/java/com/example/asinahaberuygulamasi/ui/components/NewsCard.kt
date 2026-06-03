@@ -29,12 +29,11 @@ fun NewsCard(news: NewsItem, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp), // Köşeleri biraz daha yumuşattık
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = BundleSurface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp) // Karanlık temada gölge yerine zemin rengi farkı daha şık durur
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column {
-            // --- RESİM VE ÜZERİNDEKİ ETİKET ---
             Box(modifier = Modifier.height(200.dp)) {
                 AsyncImage(
                     model = news.imageUrl,
@@ -48,7 +47,7 @@ fun NewsCard(news: NewsItem, onClick: () -> Unit) {
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent, BundleSurface),
-                                startY = 250f // Geçişin başlayacağı yükseklik
+                                startY = 250f
                             )
                         )
                 )

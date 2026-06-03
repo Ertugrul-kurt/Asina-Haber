@@ -16,50 +16,60 @@ import com.example.asinahaberuygulamasi.ui.screens.AdminScreen
 import com.example.asinahaberuygulamasi.ui.screens.HomeScreen
 import com.example.asinahaberuygulamasi.ui.screens.LoginScreen
 import com.example.asinahaberuygulamasi.ui.screens.NewsDetailScreen
+import com.example.asinahaberuygulamasi.ui.screens.ProfileScreen
+import com.example.asinahaberuygulamasi.ui.screens.SavedNewsScreen
 import com.example.asinahaberuygulamasi.ui.theme.AsinaHaberUygulamasiTheme
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.google.firebase.FirebaseApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         setContent {
             AsinaHaberUygulamasiTheme {
                 val navController = rememberNavController()
-
                 var realNews by remember { mutableStateOf(listOf<NewsItem>()) }
                 var tarihteBugun by remember { mutableStateOf<TarihteBugunResponse?>(null) }
+                var kullaniciEmail by remember { mutableStateOf("") }
+                var kullaniciIsim by remember { mutableStateOf("") }
+                var usdTry by remember { mutableStateOf("--") }
 
                 LaunchedEffect(Unit) {
                     try {
-                        realNews = RetrofitClient.apiService.canliHaberleriGetir()
+                        val response = RetrofitClient.apiService.canliHaberleriGetir()
+                        realNews = response.mapIndexed { index, news -> news.copy(id = index) }
                     } catch (e: Exception) {
-                        e.printStackTrace()
-                        realNews = listOf(
-                            NewsItem(
-                                id = "1",
-                                title = "Bağlantı Hatası",
-                                description = "Haberler yüklenemedi. İnternet bağlantınızı veya sunucuyu kontrol edin.",
-                                imageUrl = "https://picsum.photos/seed/error/800/400",
-                                category = "SİSTEM",
-                                source = "Aşina Haber"
-                            )
-                        )
+                        android.util.Log.e("ASINA", "Haber hatası: ${e.message}", e)
                     }
-
                     try {
                         tarihteBugun = RetrofitClient.apiService.tarihteBugunGetir()
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        android.util.Log.e("ASINA", "Tarihte bugün hatası: ${e.message}", e)
+                    }
+                    try {
+                        val json = withContext(Dispatchers.IO) {
+                            URL("https://v6.exchangerate-api.com/v6/ead58b06e98292fa39262179/latest/USD").readText()
+                        }
+                        val rate = JSONObject(json)
+                            .getJSONObject("conversion_rates")
+                            .getDouble("TRY")
+                        usdTry = String.format("%.2f", rate)
+                    } catch (e: Exception) {
+                        android.util.Log.e("ASINA", "Kur hatası: ${e.message}", e)
                     }
                 }
 
                 NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
                         LoginScreen(
-                            onLoginSuccess = { email, isAdmin ->
+                            onLoginSuccess = { email, isim, isAdmin ->
+                                kullaniciEmail = email
+                                kullaniciIsim = isim
                                 if (isAdmin) navController.navigate("admin")
                                 else navController.navigate("home")
                             },
@@ -71,35 +81,51 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(
                             newsList = realNews,
                             tarihteBugun = tarihteBugun,
-                            onNewsClick = { news ->
-                                val encodedId = URLEncoder.encode(news.id, StandardCharsets.UTF_8.toString())
-                                navController.navigate("detail/$encodedId")
-                            },
-                            onProfileClick = { }
+                            usdTry = usdTry,
+                            onNewsClick = { news -> navController.navigate("detail/${news.id}") },
+                            onProfileClick = { navController.navigate("profile") },
+                            onSavedClick = { navController.navigate("saved") }
                         )
                     }
                     composable(
                         "detail/{newsId}",
-                        arguments = listOf(navArgument("newsId") { type = NavType.StringType })
+                        arguments = listOf(navArgument("newsId") { type = NavType.IntType })
                     ) { backStackEntry ->
-                        val newsId = backStackEntry.arguments?.getString("newsId")
-
-                        if (newsId != null) {
-                            val decodedId = URLDecoder.decode(newsId, StandardCharsets.UTF_8.toString())
-                            val news = realNews.find { it.id == decodedId }
-
-                            if (news != null) {
-                                NewsDetailScreen(
-                                    news = news,
-                                    allNews = realNews,
-                                    onBackClick = { navController.popBackStack() },
-                                    onRelatedNewsClick = { relatedNews ->
-                                        val encodedId = URLEncoder.encode(relatedNews.id, StandardCharsets.UTF_8.toString())
-                                        navController.navigate("detail/$encodedId")
-                                    }
-                                )
-                            }
+                        val newsId = backStackEntry.arguments?.getInt("newsId")
+                        val news = realNews.find { it.id == newsId }
+                        if (news != null) {
+                            NewsDetailScreen(
+                                news = news,
+                                allNews = realNews,
+                                kullaniciIsim = kullaniciIsim,
+                                onBackClick = { navController.popBackStack() },
+                                onRelatedNewsClick = { relatedNews ->
+                                    navController.navigate("detail/${relatedNews.id}")
+                                }
+                            )
                         }
+                    }
+                    composable("saved") {
+                        SavedNewsScreen(
+                            onBackClick = { navController.popBackStack() },
+                            onNewsClick = { savedNews ->
+                                navController.navigate("detail/${savedNews.newsId}")
+                            }
+                        )
+                    }
+                    composable("profile") {
+                        ProfileScreen(
+                            email = kullaniciEmail,
+                            isim = kullaniciIsim,
+                            onBackClick = { navController.popBackStack() },
+                            onLogoutClick = {
+                                kullaniciEmail = ""
+                                kullaniciIsim = ""
+                                navController.navigate("login") {
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            }
+                        )
                     }
                     composable("admin") {
                         AdminScreen(onBackClick = { navController.popBackStack() })
