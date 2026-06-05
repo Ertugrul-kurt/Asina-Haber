@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Google Sign-In buton renkleri (play-services-auth için gerekli) -->
+    <color name="common_google_signin_btn_text_dark_disabled">#61000000</color>
+    <color name="common_google_signin_btn_text_dark_pressed">#DE000000</color>
+    <color name="common_google_signin_btn_text_dark_focused">#DE000000</color>
+    <color name="common_google_signin_btn_text_dark_default">#DE000000</color>
+    <color name="common_google_signin_btn_text_light_disabled">#61FFFFFF</color>
+    <color name="common_google_signin_btn_text_light_pressed">#FFFFFFFF</color>
+    <color name="common_google_signin_btn_text_light_focused">#FFFFFFFF</color>
+    <color name="common_google_signin_btn_text_light_default">#FFFFFFFF</color>
 </resources>

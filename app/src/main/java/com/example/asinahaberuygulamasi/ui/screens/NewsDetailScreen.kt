@@ -296,7 +296,7 @@ fun NewsDetailScreen(
                         coroutineScope.launch {
                             aiResult = GeminiService.haberDogrula(
                                 haberBaslik = news.title,
-                                haberIcerigi = news.description
+                                haberIcerik = news.description
                             )
                             isAiLoading = false
                         }

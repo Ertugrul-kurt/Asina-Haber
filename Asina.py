@@ -11,9 +11,9 @@ import os
 
 app = FastAPI()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-MONGO_URL = os.getenv("MONGO_URL")
+GEMINI_API_KEY = "key" 
+NEWS_API_KEY = "key"
+MONGO_URL = "key"
 
 ai_client = genai.Client(api_key=GEMINI_API_KEY)
 
